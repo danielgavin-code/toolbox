@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/Users/dgavin/.pyenv/shims/python3
 
 #
 #     Title    : toolbox_Backup.py 
@@ -17,6 +17,10 @@
 #     Date     : 7 June 2025
 #     Author   : Daniel Gavin
 #     Changes  : Ported to python3.
+#
+#     Date     : 20 July 2025
+#     Author   : Daniel Gavin
+#     Changes  : Supports entry of full directory path on command line.
 #
 #     Date     :
 #     Author   :
@@ -68,17 +72,24 @@ def Main():
         sys.exit(1)
 
     backupFile = sys.argv[1]
+
+    if not os.path.isfile(backupFile):
+        print("[ERROR] File not found: " + backupFile)
+        sys.exit(1)
+
     CheckPath(BACKUP_PATH)
 
     today     = datetime.datetime.today()
     timestamp = today.strftime('%Y%m%d.%H%M%S')
 
-    backupName     = os.path.basename(backupFile) + "." + timestamp
+    baseName       = os.path.basename(backupFile)
+    backupName     = baseName + "." + timestamp
     fullBackupPath = os.path.join(BACKUP_PATH, backupName)
 
-    cmd = 'cp -p "{}" "{}"'.format(backupFile, fullBackupPath)
+    cmd = f'cp -p "{backupFile}" "{fullBackupPath}"'
     os.system(cmd)
 
+    # print(f"[INFO] Backup created at: {fullBackupPath}")
 
 if __name__ == "__main__":
     Main()
